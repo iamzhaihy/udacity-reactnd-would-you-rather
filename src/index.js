@@ -3,4 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import reducer from './reducers';
+import middleWare from './middleware';
+import { createStore } from 'redux';
+
+const store = createStore(reducer, middleWare);
