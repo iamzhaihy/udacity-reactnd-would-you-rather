@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { login } from '../actions/authedUser';
 
 class Login extends Component {    
     constructor(props) {
@@ -16,40 +17,41 @@ class Login extends Component {
         });
     }
 
-    handleSubmit() {
+    handleSubmit(event) {
+        event.preventDefault();
         const { selected } = this.state;
-        alert(`Signed in as ${selected}`);
+        if (selected)
+            this.props.dispatch(login(selected));
     }
 
     render() {
+        const { users } = this.props;
         const { selected } = this.state;
-        const { authedUser, users } = this.props;
+        
+        return (
+            <div>
+                <form onSubmit={this.handleSubmit}>
+                    <select onChange={this.handleChange}>
+                        <option value=''>Choose a user from the list</option>
+                        {Object.keys(users).map((uid) => {
+                            return (
+                                <option key={uid} value={uid}>
+                                    {users[uid]["name"]}
+                                </option>
+                            )
+                        })}
+                    </select>
+                    <input type="submit" value={selected ? `Sign in as ${selected}`: 'Sign in'} />
+                </form>
 
-        if (authedUser !== null)
-            return <div> {`Logged in as ${authedUser}`} </div>
-        else
-            return (
-                <div>
-                    <form onSubmit={this.handleSubmit}>
-                        <select onChange={this.handleChange}>
-                            {Object.keys(users).map((uid) => {
-                                return (<option key={uid} value={uid}>{users[uid]["name"]}</option>)
-                            })}
-                        </select>
-                        <button type="submit" name="submit">
-                            {selected ? `Sign in as ${selected}`: 'Sign in'}
-                        </button>
-                    </form>
-
-                </div>
+            </div>
             )
     }
 }
 
 function mapStateToProps(state) {
     return {
-        users: state.users,
-        authedUser: state.authedUser
+        users: state.users
     }
 }
 
