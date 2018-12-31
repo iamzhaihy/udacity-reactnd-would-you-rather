@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { logout } from '../actions/authedUser';
 import { handleReceiveUsers } from '../actions/users';
 import { handleReceiveQuestions } from '../actions/questions';
 
@@ -12,7 +13,14 @@ class App extends Component {
     render() {
         return (
             <div>
-                App
+                    {!authedUser
+                        ? <Login />
+                        : <div>
+                            <div> 
+                                {`Logged in as ${authedUser} `} 
+                                <span onClick={() => dispatch(logout(authedUser))}> Logout </span> 
+                            </div>
+                          </div>}
             </div>
         );
     }
