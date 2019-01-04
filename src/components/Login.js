@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Form, Button, Dropdown } from 'semantic-ui-react';
 import { login } from '../actions/authedUser';
 
 class Login extends Component {    
@@ -11,9 +12,9 @@ class Login extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(event) {
+    handleChange(event, {value}) {
         this.setState({
-            selected: event.target.value
+            selected: value
         });
     }
 
@@ -27,22 +28,31 @@ class Login extends Component {
     render() {
         const { users } = this.props;
         const { selected } = this.state;
+        const options = Object.keys(users).map((uid) => {
+            const { id, name, avatarURL } = users[uid];
+            return {
+                key: id,
+                value: id,
+                text: `${name} (@${id})`,
+                image: { avatar: true, src: avatarURL }
+            }
+        });
         
         return (
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    <select onChange={this.handleChange}>
-                        <option value=''>Choose a user from the list</option>
-                        {Object.keys(users).map((uid) => {
-                            return (
-                                <option key={uid} value={uid}>
-                                    {users[uid]["name"]}
-                                </option>
-                            )
-                        })}
-                    </select>
-                    <input type="submit" value={selected ? `Sign in as ${selected}`: 'Sign in'} />
-                </form>
+            <div style={{width: '80%', margin:'10px auto'}}>
+                <h1 style={{textAlign: 'center'}}> Please login first </h1>
+                <Form relaxed='very' size='large' onSubmit={this.handleSubmit}>
+                    <Form.Field>
+                        <Dropdown 
+                            onChange={this.handleChange} 
+                            placeholder='Select User' 
+                            selection 
+                            options={options} 
+                            value={selected}
+                        />
+                    </Form.Field>
+                    <Button size='large' content={selected ? `Sign in as ${selected}`: 'Sign in'} primary /> 
+                </Form>
 
             </div>
             )
