@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { handleAnswerQuestion } from '../actions/questions';
 
+import NotFound from './NotFound';
 import { Container, Divider, Grid, Segment, Button, Icon } from 'semantic-ui-react';
 
 const styles = {
@@ -26,10 +27,14 @@ class Question extends Component {
 
     render() {
         const { authedUser, question } = this.props;
+
+        if (!question)
+            return (<NotFound />)
+
         const { author, optionOne, optionTwo } = question;
         const stats = questionAnswered(authedUser, question) ? computeStatistics(question) : null;
 
-    return (
+        return (
             <div style={styles.container}>
                 <h1> Would you rather </h1>
                 <h4> {`posted by ${author}`} </h4>
@@ -64,9 +69,9 @@ class Question extends Component {
                         </Container>
                     </Fragment>
                 }
-        </div>
-    )
-}
+            </div>
+        )
+    }
 }
 
 function computeStatistics(question) {
