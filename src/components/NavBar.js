@@ -1,5 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { Icon, Popup } from 'semantic-ui-react';
+
 import './NavBar.css';
 
 const NavBar = () => {
@@ -23,7 +25,12 @@ const NavBar = () => {
                 </li>
                 <li>
                     <NavLink to='/leaderboard' activeClassName="active"> 
-                        LeaderBoard 
+                        Leaderboard 
+                    </NavLink>
+                </li>
+                <li style={{float: 'right'}}>
+                    <NavLink to='/add'> 
+                        <Popup trigger={<Icon name='compose' />} content='ask a new question' />
                     </NavLink>
                 </li>
             </ul>
