@@ -27,6 +27,8 @@ class Question extends Component {
     render() {
         const { authedUser, question } = this.props;
         const { author, optionOne, optionTwo } = question;
+        const stats = questionAnswered(authedUser, question) ? computeStatistics(question) : null;
+
     return (
             <div style={styles.container}>
                 <h1> Would you rather </h1>
@@ -65,6 +67,19 @@ class Question extends Component {
         </div>
     )
 }
+}
+
+function computeStatistics(question) {
+    let voterOne = question['optionOne']['votes'].length;
+    let voterTwo = question['optionTwo']['votes'].length;
+    
+    return {
+        voterOne,
+        voterTwo,
+        voterAll: voterOne + voterTwo,
+        percentOne: 100 * voterOne/(voterOne + voterTwo),
+        percentTwo: 100 * voterTwo/(voterOne + voterTwo)
+    }
 }
 
 function questionAnswered(uid, question) {
