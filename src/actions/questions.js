@@ -1,5 +1,5 @@
 import { handleReceiveUsers } from "./users";
-import { _getQuestions, _saveQuestionAnswer } from "../utils/_DATA"
+import { _getQuestions, _saveQuestionAnswer, _saveQuestion } from "../utils/_DATA"
 
 export const RECEIVE_QUESTIONS = "RECEIVE_QUESTIONS";
 
@@ -29,5 +29,17 @@ export function handleAnswerQuestion(answerObject) {
                 dispatch(handleReceiveUsers())
             })
             .catch((e) => console.assert('Error: failed to save poll'))
+    }
+}
+
+
+export function handleAddQuestion(question) {
+    return (dispatch) => {
+        _saveQuestion(question)
+            .then(() => {
+                dispatch(handleReceiveQuestions())
+                dispatch(handleReceiveUsers())
+            })
+            .catch((e) => console.assert('Error: failed to add question'))
     }
 }
