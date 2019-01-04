@@ -1,6 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { handleAnswerQuestion } from '../actions/questions';
+
+import { Container, Divider, Grid, Segment, Button, Icon } from 'semantic-ui-react';
+
+const styles = {
+    container: {
+        width: '80%',
+        margin: 'auto',
+        textAlign: 'center'
+    }
+}
 
 class Question extends Component {
     onSubmit(answer) {
@@ -18,19 +28,40 @@ class Question extends Component {
         const { authedUser, question } = this.props;
         const { author, optionOne, optionTwo } = question;
     return (
-            <div>
-                <h1> Would you rather? </h1>
-                <h5> {`posted by ${author}`} </h5>
-                <div>
-                    <p> {`Option 1: ${optionOne['text']}`} </p>
-                    { questionAnswered(authedUser,question) && <p> {`voted by ${optionOne.votes.join(", ")}`} </p>}
-                </div>
-                <div>
-                    <p> {`Option 2: ${optionTwo['text']}`} </p>
-                    { questionAnswered(authedUser,question) && <p> {`voted by ${optionTwo.votes.join(", ")}`} </p>}
-                </div>
-                <button className='button' onClick={() => this.onSubmit('optionOne')}>Choose Option 1</button>
-                <button className='button' onClick={() => this.onSubmit('optionTwo')}>Choose Option 2</button>
+            <div style={styles.container}>
+                <h1> Would you rather </h1>
+                <h4> {`posted by ${author}`} </h4>
+                <Segment>
+                    <Grid columns={2} relaxed='very'>
+                        <Grid.Column>
+                            <h2> Option 1 </h2> 
+                            <p> {`${optionOne['text']}`} </p>
+                            { question['optionOne']['votes'].includes(authedUser)
+                                && <Icon name="check" color="green" size="huge" /> }
+                        </Grid.Column>
+                        <Grid.Column>
+                            <h2> Option 2</h2>
+                            <p> {`${optionTwo['text']}`} </p>
+                            { question['optionTwo']['votes'].includes(authedUser)
+                                && <Icon name="check" color="green" size="huge" /> }
+                        </Grid.Column>
+                    </Grid>
+                    <Divider vertical>Or</Divider>
+                </Segment>
+
+                { !questionAnswered(authedUser, question)
+                    ? <Fragment>
+                        <Button onClick={() => this.onSubmit('optionOne')}>Choose Option 1</Button>
+                        <Button onClick={() => this.onSubmit('optionTwo')}>Choose Option 2</Button>
+                    </Fragment>
+                    : <Fragment>
+                        <Divider horizontal>Statistics</Divider>
+                        <Container text>
+                            <p>{`${stats.voterOne} people voted option 1 (${stats.percentOne.toFixed(2)}%)`}</p>
+                            <p>{`${stats.voterTwo} people voted option 2 (${stats.percentTwo.toFixed(2)}%)`}</p>
+                        </Container>
+                    </Fragment>
+                }
         </div>
     )
 }
